@@ -1,0 +1,56 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  username  String   @unique @db.VarChar(255)
+  email     String
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  toRead    Book[]   @relation("toReadByWhom", fields: [toReadId], references: [id])
+  toReadId  String?
+  read      Book[]   @relation("readByWhom", fields: [readId], references: [id])
+  readId    String?
+  reviews   Review[] @relation("whichUser")
+  reviewId  String?
+
+  @@map(name: "user")
+}
+
+model Book {
+  id        String   @id @default(cuid())
+  name      String
+  author    String
+  ISBN      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  readBy    User[]   @relation("readByWhom")
+  toReadBy  User[]   @relation("toReadByWhom")
+  reviews   Review[] @relation("whichBook")
+
+  @@map(name: "book")
+}
+
+model Review {
+  id        String   @id @default(cuid())
+  rating    Int
+  comment   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  book      Book?     @relation("whichBook", fields: [bookId], references: [id])
+  bookId    String?
+  user      User?     @relation("whichUser", fields: [userId], references: [id])
+  userId    String?
+
+  @@map(name: "review")
+}
