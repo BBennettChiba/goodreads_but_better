@@ -1,0 +1,12 @@
+post http://localhost:3000/api/book
+Content-Type: application/json
+
+{
+    "name": "The Lord of the Rings",
+    "ISBN": "9780044403371",
+    "author": {"firstName": "J.R.R.", "lastName": "Tolkien"}
+}
+###
+get http://localhost:3000/api/book/ckzv6dju60013byi0trj4xa32
+###
+DELETE http://localhost:3000/api/book/ckzv6dju60013byi0trj4xa32 HTTP/1.1
