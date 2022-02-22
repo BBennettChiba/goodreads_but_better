@@ -12,7 +12,10 @@ export default async function handler(
   if (typeof id !== "string")
     return res.status(404).json({ message: "No id provided" });
   if (req.method === "GET") {
-    const book = await prisma.book.findUnique({ where: { id } });
+    const book = await prisma.book.findUnique({
+      where: { id },
+      include: { author: true },
+    });
     if (!book) return res.status(404).json({ message: "Book not found" });
     return res.status(200).json(book);
   }
@@ -20,5 +23,14 @@ export default async function handler(
     await prisma.book.delete({ where: { id } });
     return res.status(200).json({ message: "Book deleted" });
   }
-  return res.status(404);
+  if (req.method === "PUT") {
+    let update = await prisma.book.update({
+      where: { id },
+      data: req.body,
+    })
+    return res
+      .status(200)
+      .json(update);
+  }
+  return res.status(404).json({ message: "Method not allowed" });
 }

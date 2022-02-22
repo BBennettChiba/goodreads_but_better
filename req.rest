@@ -2,11 +2,29 @@ post http://localhost:3000/api/book
 Content-Type: application/json
 
 {
-    "name": "The Lord of the Rings",
-    "ISBN": "9780044403371",
-    "author": {"firstName": "J.R.R.", "lastName": "Tolkien"}
+    "title": "Return of the Crimson Guard",
+    "subtitle": "A Novel of the Malazan Empire",
+    "ISBN": "9781429910897",
+    "author": ["Ian C. Esslemont", "Steven Erikson"],
+    "publisher": "Tor Books",
+    "published": "2010-04-13",
+    "thumbnail": "http://books.google.com/books/content?id=AcVZM_mRkLkC&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api",
+    "description": "Epic and involving, Return of the Crimson Guard is an enthralling new chapter in the tumultuous history of the Malazan Empire from fantasy author Ian C. Esslemont The return of the mercenary company, the Crimson Guard, could not have come at a worse time for a Malazan Empire exhausted by warfare and weakened by betrayals and rivalries. Indeed, there are those who wonder whether the Empress Laseen might not be losing her grip on power as she faces increasing unrest as conquered kingdoms and principalities sense freedom once more. Into the seething cauldron of Quon Tali--the Empire's heartland--marches the Guard. With their return comes the memory of the Empire--and yet all is not well with the Guard itself. Elements within its elite, the Avowed, have set their sights on far greater power. There are ancient entities who also seek to further their own arcane ends. And what of the swordsman called Traveller who, with his companion Ereko, has gone in search of a confrontation from which none have ever returned? As the Guard prepares to wage war, so Laseen's own generals and mages, the 'Old Hands', grow impatient at what they see as her mismanagement of the Empire. But could Laseen have outwitted them all? Could she be using the uprisings to draw out and finally eliminate these last irksome survivors from the days of her illustrious predecesor, Kellanved? At the Publisher's request, this title is being sold without Digital Rights Management Software (DRM) applied."
 }
 ###
-get http://localhost:3000/api/book/ckzv6dju60013byi0trj4xa32
+get http://localhost:3000/api/book
 ###
 DELETE http://localhost:3000/api/book/ckzv6dju60013byi0trj4xa32 HTTP/1.1
+###
+PUT http://localhost:3000/api/book/ckzxwuhtj0000mhi0higw1wr7 HTTP/1.1
+Content-Type: application/json
+
+{
+    "subtitle": "A Novel of the Malazan Empire"
+}
+
+###
+get https://www.googleapis.com/books/v1/volumes?q=gardens of the moon&key=AIzaSyDVFsYvujIZ4F2up2VWFu5MXvahYaeRUXA
+
+###
+get http://localhost:3000/api/search?query=return of the crimson guard

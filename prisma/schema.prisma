@@ -28,17 +28,23 @@ model User {
 }
 
 model Book {
-  id        String   @id @default(cuid())
-  name      String
-  ISBN      String   @unique
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  readBy    User[]   @relation("readByWhom")
-  toReadBy  User[]   @relation("toReadByWhom")
-  reviews   Review[] @relation("whichBook")
-  author    Author   @relation(fields: [authorId], references: [id])
-  authorId  String
+  id          String   @id @default(cuid())
+  title       String
+  subtitle    String?
+  ISBN        Int      @unique
+  publisher   String
+  published   DateTime
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  description String
+  readBy      User[]   @relation("readByWhom")
+  toReadBy    User[]   @relation("toReadByWhom")
+  reviews     Review[] @relation("whichBook")
+  author      Author[]
+  firstAuthor String
+  thumbnail   String
 
+  @@unique([title, firstAuthor], name: "titleAndAuthor")
   @@map(name: "book")
 }
 
@@ -58,9 +64,10 @@ model Review {
 
 model Author {
   id        String @id @default(cuid())
-  firstName String
+  firstName  String
   lastName  String
+  otherNames String?
   books     Book[]
-  
-  @@unique([firstName, lastName], name: "fullName")
+
+  @@unique([firstName, otherNames, lastName], name: "fullName")
 }
