@@ -1,13 +1,28 @@
 import React from "react";
 import type { Book } from "@prisma/client";
 import { GetStaticProps, GetStaticPaths, GetServerSideProps } from "next";
-
+import Image from "next/image";
 type Props = {
   book: Book;
 };
 
 export default function id({ book }: Props) {
-  return <div>{JSON.stringify(book)}</div>;
+  const date = new Date(book.published);
+  
+  return (
+    <div>
+      <Image
+        src={book.thumbnail}
+        alt={`cover of ${book.title}`}
+        width="128px"
+        height="199px"
+      ></Image>
+      <h1>{book.title}</h1>
+      <h5>{book.publisher} {date.getFullYear()}</h5>
+      <h2>Author(s): {book.author.map(a => (<h3 key={a.id}>{a.firstName} {a.otherNames} {a.lastName}</h3>))}</h2>
+      <article><h3>Description</h3><p>{book.description}</p></article>
+    </div>
+  );
 }
 
 export const getStaticPaths = async () => {
@@ -26,6 +41,7 @@ export const getStaticPaths = async () => {
 };
 
 export const getStaticProps: GetStaticProps = async (context) => {
+  if (!context.params) return { props: {} };
   let id = context.params.id;
   const res = await fetch(`http://localhost:3000/api/book/${id}`);
   let book = await res.json();
