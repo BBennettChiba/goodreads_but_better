@@ -1,9 +1,9 @@
 import React from "react";
-import type { Book } from "@prisma/client";
+import type { BookWithAuthors } from "../../lib/prisma";
 import { GetStaticProps, GetStaticPaths, GetServerSideProps } from "next";
 import Image from "next/image";
 type Props = {
-  book: Book;
+  book: BookWithAuthors;
 };
 
 export default function id({ book }: Props) {
@@ -27,7 +27,7 @@ export default function id({ book }: Props) {
 
 export const getStaticPaths = async () => {
   const res = await fetch("http://localhost:3000/api/book");
-  const books: Book[] = await res.json();
+  const books: BookWithAuthors[] = await res.json();
   console.log(books);
   // Get the paths we want to pre-render based on posts
   const paths = books.map(({ id }) => ({

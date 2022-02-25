@@ -17,10 +17,8 @@ model User {
   password  String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  toRead    Book[]   @relation("toReadByWhom", fields: [toReadId], references: [id])
-  toReadId  String?
-  read      Book[]   @relation("readByWhom", fields: [readId], references: [id])
-  readId    String?
+  toRead    Book[]   @relation("toReadByWhom", references: [id])
+  read      Book[]   @relation("readByWhom", references: [id])
   reviews   Review[] @relation("whichUser")
   reviewId  String?
 
@@ -54,20 +52,20 @@ model Review {
   comment   String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  book      Book?    @relation("whichBook", fields: [bookId], references: [id])
-  bookId    String?
-  user      User?    @relation("whichUser", fields: [userId], references: [id])
-  userId    String?
+  book      Book     @relation("whichBook", fields: [bookId], references: [id])
+  bookId    String
+  user      User     @relation("whichUser", fields: [userId], references: [id])
+  userId    String
 
   @@map(name: "review")
 }
 
 model Author {
-  id        String @id @default(cuid())
+  id         String  @id @default(cuid())
   firstName  String
-  lastName  String
+  lastName   String
   otherNames String?
-  books     Book[]
+  books      Book[]
 
   @@unique([firstName, otherNames, lastName], name: "fullName")
 }

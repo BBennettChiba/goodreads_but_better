@@ -12,13 +12,34 @@ type PostBody = {
   description: string;
   thumbnail: string;
 };
-
+/**
+ * @todo get a way to prevent duplicate books. send the full title plus first author maybe?
+ */
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Book | Book[] | { message: string }>
 ) {
   if (req.method === "POST") {
-    const { title, ISBN, author, description, publisher, published, thumbnail } = req.body as PostBody;
+    const {
+      title,
+      ISBN,
+      author,
+      description,
+      publisher,
+      published,
+      thumbnail,
+    } = req.body as PostBody;
+    console.log(req.body);
+    if (
+      !title ||
+      !ISBN ||
+      !author ||
+      !description ||
+      !publisher ||
+      !published ||
+      !thumbnail
+    )
+      return res.status(400).json({ message: "Please fill in all fields" });
     const book = await prisma.book.create({
       include: {
         author: true,
@@ -55,6 +76,14 @@ export default async function handler(
     return res.status(200).json(book);
   }
   if (req.method === "GET") {
+    if (req.query.ISBN as string) {
+      const book = await prisma.book.findUnique({
+        where: { ISBN: +req.query.ISBN },
+      });
+      console.log(book);
+      if (!book) return res.status(404).json({ message: "Book not found" });
+      return res.status(200).json(book);
+    }
     const books = await prisma.book.findMany({ include: { author: true } });
     return res.status(200).json(books);
   }

@@ -1,5 +1,5 @@
 
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, Prisma } from "@prisma/client";
 
 // PrismaClient is attached to the `global` object in development to prevent
 // exhausting your database connection limit.
@@ -22,3 +22,9 @@ if (process.env.NODE_ENV === 'production') {
   prisma = global.prisma
 }
 export default prisma
+
+const bookWithAuthors = Prisma.validator<Prisma.BookArgs>()({
+  include: { author: true },
+})
+
+export type BookWithAuthors = Prisma.BookGetPayload<typeof bookWithAuthors>
